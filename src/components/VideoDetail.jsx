@@ -7,24 +7,26 @@ import { Box, Typography, Stack } from "@mui/material";
 import { CheckCircle } from "@mui/icons-material";
 
 import Videos from "./Videos";
-import { fetchFromAPI } from "../utils/fetchFromAPI";
+import { getVideoDetails,getRelatedVideos } from "../utils/fetchFromAPI";
 
 const VideoDetail = () => {
   const [videoDetail, setVideoDetail] = useState(null);
   const [videos, setVideos] = useState(null);
   const { id } = useParams();
 
+  const getVDetails = async () => {
+    const videoD = await getVideoDetails(id);
+    const relatedVideos = await getRelatedVideos(id);
+    console.log({ videoD,relatedVideos:relatedVideos.contents});
+    setVideoDetail(videoD);
+    setVideos(relatedVideos.contents);
+  };
+
   useEffect(() => {
-    fetchFromAPI(`videos?part=snippet,statistics&id=${id}`).then((data) =>
-      setVideoDetail(data.items[0])
-    );
+    getVDetails();
+  }, []);
 
-    fetchFromAPI(`search?part=snippet&relatedToVideoId=${id}&type=video`).then(
-      (data) => setVideos(data.items)
-    );
-  }, [id]);
-
-  if (!videoDetail?.snippet) return "Loading...";
+  // if (!videoDetail?.snippet) return "Loading...";
 
   // const {
   //   snippet: { title, channelId, channelTitle },
@@ -32,14 +34,15 @@ const VideoDetail = () => {
   // } = videoDetail;
 
   return (
-    <Box minHeight="95vh">
+    <Box minHeight="90vh">
       <Stack direction={{ xs: "column", md: "row" }}>
         <Box flex={1}>
           <Box
             sx={{
               width: "100%",
               position: "sticky",
-              top: "86px",
+              top: '0vh',
+              // backgroundColor: "red",
             }}
           >
             <ReactPlayer
@@ -48,7 +51,7 @@ const VideoDetail = () => {
               controls
             />
             <Typography color="#fff" variant="h5" fontWeight="bold" p={2}>
-              {videoDetail?.snippet?.title}
+              {videoDetail?.title}
             </Typography>
             <Stack
               direction="row"
@@ -57,29 +60,23 @@ const VideoDetail = () => {
               py={1}
               px={2}
             >
-              <Link to={`/channel/${videoDetail?.snippet?.channelId}`}>
+              {/* <Link to={`/channel/${videoDetail?.author?.channelId}`}> */}
                 <Typography
                   variant={{ sm: "subtitle1", md: "h6" }}
                   color="#fff"
                 >
-                  {videoDetail?.snippet?.channelTitle}
+                  {videoDetail?.author?.title}
                   <CheckCircle
                     sx={{ fontSize: "14px", color: "gray", ml: "5px" }}
                   />
                 </Typography>
-              </Link>
+              {/* </Link> */}
               <Stack direction="row" gap="20px" alignItems="center">
                 <Typography variant="body1" sx={{ opacity: 0.7 }}>
-                  {parseInt(
-                    videoDetail?.statistics?.viewCount
-                  ).toLocaleString()}{" "}
-                  views
+                  {parseInt(videoDetail?.stats?.views).toLocaleString()} views
                 </Typography>
                 <Typography variant="body1" sx={{ opacity: 0.7 }}>
-                  {parseInt(
-                    videoDetail?.statistics?.likeCount
-                  ).toLocaleString()}{" "}
-                  likes
+                  {parseInt(videoDetail?.stats?.views).toLocaleString()} likes
                 </Typography>
               </Stack>
             </Stack>

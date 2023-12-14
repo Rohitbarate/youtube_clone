@@ -6,7 +6,7 @@ import ChannelCard from "./ChannelCard";
 import { Stack, Box } from "@mui/material";
 
 const Videos = ({ videos, direction }) => {
-  //   console.log(videos);
+  // console.log({VIDEOS:videos});
 
   if (!videos?.length) return "Loading...";
 
@@ -14,16 +14,19 @@ const Videos = ({ videos, direction }) => {
     <Stack
       direction={direction || "row"}
       flexWrap="wrap"
-      justifyContent="start"
+      justifyContent="center"
+      alignItems="center"
       gap={2}
     >
-      {videos.map((item, index) => (
-        <Box key={index}>
-          {item.id.videoId && <VideoCard video={item} />}
-          {item.id.channelId && <ChannelCard channelDetail={item} />}
-        </Box>
-      ))}
-      console.log(hey);
+      {videos.map((item, index) => {
+        console.log({videofeomVideo:item.video});
+        return (
+          <Box key={index}>
+            {item.video?.videoId && <VideoCard video={item.video} />}
+            {/* {item.video.channelId && <ChannelCard channelDetail={item.video} />} */}
+          </Box>
+        );
+      })}
     </Stack>
   );
 };

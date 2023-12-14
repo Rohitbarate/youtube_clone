@@ -13,13 +13,8 @@ import {
 } from "../utils/constants";
 import { height } from "@mui/system";
 
-const VideoCard = ({
-  video: {
-    id: { videoId },
-    snippet,
-  },
-}) => {
-  //   console.log(videoId, snippet);
+const VideoCard = ({ video, snippet }) => {
+    console.log({video, snippet});
   return (
     <Card
       sx={{
@@ -28,10 +23,10 @@ const VideoCard = ({
         borderRadius: 0,
       }}
     >
-      <Link to={videoId ? `/video/${videoId}` : demoVideoUrl}>
+      <Link to={video.videoId ? `/video/${video.videoId}` : demoVideoUrl}>
         <CardMedia
-          image={snippet?.thumbnails?.high?.url}
-          alt={snippet?.title}
+          image={video?.thumbnails[0]?.url}
+          alt={video?.title}
           sx={{
             width: {
               xs: "100%",
@@ -43,23 +38,23 @@ const VideoCard = ({
         />
       </Link>
       <CardContent sx={{ backgroundColor: "#1e1e1e", height: "106px" }}>
-        <Link to={videoId ? `/video/${videoId}` : demoVideoUrl}>
+        <Link to={video.videoId ? `/video/${video.videoId}` : demoVideoUrl}>
           <Typography variant="subtitle1" fontWeight="bold" color="#fff">
-            {snippet?.title.slice(0, 60) || demoVideoTitle.slice(0, 60)}
+            {video?.title.slice(0, 60) || demoVideoTitle.slice(0, 60)}
           </Typography>
         </Link>
-        <Link
+        {/* <Link
           to={
-            snippet.channelId
-              ? `/channel/${snippet?.channelId}`
+            video.author.channelId
+              ? `/channel/${video?.author.channelId}`
               : demoChannelUrl
           }
-        >
+        > */}
           <Typography variant="subtitle2" fontWeight="bold" color="gray">
-            {snippet?.channelTitle || demoChannelTitle}
+            {video?.author.title || demoChannelTitle}
             <CheckCircle sx={{ fontSize: 12, color: "gray", ml: "5px" }} />
           </Typography>
-        </Link>
+        {/* </Link> */}
       </CardContent>
     </Card>
   );
